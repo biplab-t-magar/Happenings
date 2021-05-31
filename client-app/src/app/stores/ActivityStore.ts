@@ -160,6 +160,10 @@ export default class ActivityStore {
 
     }
 
+    clearSelectedActivity = () => {
+        this.selectedActivity = undefined;
+    }
+
     private setActivity = (activity: Activity) => {
         const user = store.userStore.user;
         if (user) {
@@ -179,6 +183,7 @@ export default class ActivityStore {
         return this.activityRegistry.get(id);
 
     }
+
 
 
 }
