@@ -1,4 +1,5 @@
-namespace Domain{
+namespace Domain
+{
     public class UserFollowing
     {
         public string ObserverId { get; set; }
@@ -6,4 +7,4 @@ namespace Domain{
         public string TargetId { get; set; }
         public AppUser Target { get; set; }
     }
-}
+} 
