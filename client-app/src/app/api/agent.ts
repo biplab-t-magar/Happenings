@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { history } from '../..';
 import { Activity, ActivityFormValues } from '../models/Activity';
 import { PaginatedResults } from '../models/Pagination';
-import { Photo, Profile } from '../models/Profile';
+import { Photo, Profile, UserActivity } from '../models/Profile';
 import { User, UserFormValues } from '../models/User';
 import { store } from '../stores/store';
 
@@ -13,7 +13,7 @@ const sleep = (delay: number) => {
     });
 }
 
-axios.defaults.baseURL = 'http://localhost:5000/api';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 axios.interceptors.request.use(config => {
     const token = store.commonStore.token;
@@ -22,7 +22,7 @@ axios.interceptors.request.use(config => {
 });
 
 axios.interceptors.response.use(async (response) => {
-    await sleep(1000);
+    if(process.env.NODE_ENV === 'development') await sleep(1000);
     const pagination = response.headers['pagination'];
     if(pagination) {
         response.data = new PaginatedResults(response.data, JSON.parse(pagination));
@@ -101,7 +101,8 @@ const Profiles = {
     deletePhoto: (id: string) => requests.delete(`/photos/${id}`),
     updateProfile: (profile: Partial<Profile>) => requests.put('/profiles', profile),
     updateFollowing: (username: string) => requests.post(`/follow/${username}`, {}),
-    listFollowings: (username: string, predicate: string) => requests.get<Profile[]>(`/follow/${username}?predicate=${predicate}`)
+    listFollowings: (username: string, predicate: string) => requests.get<Profile[]>(`/follow/${username}?predicate=${predicate}`),
+    listActivities: (username: string, predicate: string) => requests.get<UserActivity[]>(`/profiles/${username}/activities?predicate=${predicate}`)
 }
 
 const agent = {
